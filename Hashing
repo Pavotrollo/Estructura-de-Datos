@@ -1,0 +1,96 @@
+from datetime import datetime
+import string
+
+# Tamaño del arreglo
+Tamaño = 7
+Matriculas = [[] for _ in range(Tamaño)]
+
+def generar_hash_matricula(nombre: str, fecha_nacimiento: str) -> int:
+ 
+    # Quitar espacios y poner en minusculas
+    nombrefinal = nombre.lower().replace(" ", "")
+    
+    # Sumamos el codigo ASCII y lo multiplicamos por la longitud del nombre
+    num_nombre = sum(ord(caracter) for caracter in nombrefinal)
+    num_nombre *= len(nombrefinal)
+
+    # Convertimos la fecha a tipo fecha
+    fecha = datetime.strptime(fecha_nacimiento, "%d/%m/%Y")
+        
+    # Creamos un valor numero grande para la fecha
+    valor_fecha = (fecha.year * 10000) + (fecha.month * 100) + fecha.day
+
+    # Sumamos los valores del nombre y la fecha y multiplicamos por un primo para evitar colisiones
+    hash_combinado = (num_nombre * 17) + valor_fecha
+    
+    # Sacamos el modulo para obtener el indice
+    matricula = hash_combinado % Tamaño
+    
+    return matricula
+
+def agregar_matricula():
+
+    print("\n--- Agregar Nueva Matricula ---")
+    nombre = input("Nombre completo: ").strip()
+    fecha_nacimiento = input("Fecha de Nacimiento (DD/MM/AAAA): ").strip()
+
+    # 1. Generar el índice hash
+    indice = generar_hash_matricula(nombre, fecha_nacimiento)
+    
+    # Datos a guardar (podrías expandir esto con más información)
+    datos_estudiante = {
+        "nombre": nombre,
+        "fecha_nacimiento": fecha_nacimiento,
+        "matricula_hash": indice  # Guardamos el hash por referencia
+    }
+    if Matriculas[indice]:
+        print(f"\n El índice {indice} ya contiene {len(Matriculas[indice])} registro(s).")
+    # 3. Insertar los datos en la lista correspondiente al índice
+    Matriculas[indice].append(datos_estudiante)
+    
+    print(f"\n Matricula: {indice}")
+    print(" Matrícula Agregada")
+
+
+def buscar_matricula():
+    print("\n--- Buscar Matricula ---")
+    matricula_busqueda = int(input("Matricula del estudiante: "))
+    
+    # 2. Buscar en la lista del índice
+    lista_indice = Matriculas[matricula_busqueda]
+    
+    if not lista_indice:
+        print(f"\n No se enconntro al estudiante")
+        return
+    else:
+        # 3. Iterar sobre la lista para encontrar la coincidencia exacta
+        for estudiante in lista_indice:
+            print("\n Estudiante encontrado")
+            print(f" Nombre: {estudiante['nombre']}")
+            print(f" Fecha Nacimiento: {estudiante['fecha_nacimiento']}")
+            print(f" Matricula: {estudiante['matricula_hash']}")
+            encontrado = True
+            break
+            
+    if not encontrado:
+        print(f"\n No se encontro al estudiante")
+        
+while True:
+        print("---------------------------------------------")
+        print("Sistema de Matriculas Hash")
+        print("1. Agregar nueva matricula")
+        print("2. Buscar matricula")
+        print("3. Salir")
+        print("---------------------------------------------")
+        
+        opcion = input("Elige una opcion: ").strip()
+
+        if opcion == '1':
+            agregar_matricula()
+        elif opcion == '2':
+            buscar_matricula()
+        elif opcion == 'e':
+            print("\nSaliendo del programa....")
+            break
+        else:
+            print("\nOpcion no valida. Elige un número del 1 al 3")
