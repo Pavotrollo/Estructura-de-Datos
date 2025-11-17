@@ -1,0 +1,27 @@
+//Bibliotecas
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+int main(){
+	int i=8;  // Variable i
+	int mat [i]; //Matriz tama�o i
+	int* dir [i]; //Matriz de direcciones
+	
+	//Llenar el vector con valores aleatorios
+	for(int x=0; x<i; x++){
+		mat[x]=rand() % 101;
+	}
+	
+	//Utilizar polinomio de direccionamiento para llenar el vector
+	for(int x=0; x<i; x++){
+		dir[x]=&mat[0]+x; //Polinomio
+				
+		//Imprimir el vector de direccion
+		cout<<"Posicion ["<<x<<"]: ";
+				cout<<mat[x]<<" ";
+				cout<<dir[x]<<"\n\n";	
+	}
+}
+
