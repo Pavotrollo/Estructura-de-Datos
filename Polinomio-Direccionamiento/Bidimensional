@@ -1,0 +1,32 @@
+#include <iostream>
+#include <cstdlib>//Biblioteca 
+
+using namespace std;
+
+int main(){
+int i=3;  // Variable i
+	int mat [i][i]; //Matriz tama�o i
+	int* dir [i][i]; //Matriz de direcciones
+	
+	//Llenar matriz con valores aleatorios
+	for(int x=0; x<i; x++){
+		for(int j=0;j<i;j++){
+			mat[x][j]= rand() % 101;
+						
+		}
+	}
+	
+	//Utilizar polinomio de direccionamiento para llenar matriz
+	for(int x=0; x<i; x++){
+		cout<<"\n";
+		for(int j=0;j<i;j++){
+				dir[x][j]=&mat[0][0]+(i*j+x); //Polinomio
+				
+				//Imprimir la matriz de direccion
+				cout<<"["<<x<<"]"<<"["<<j<<"]";
+				cout<<mat[x][j]<<" ";
+				cout<<dir[x][j]<<"		";			
+		}
+	}
+}
+	
