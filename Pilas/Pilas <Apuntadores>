@@ -1,0 +1,131 @@
+#include <iostream>
+
+using namespace std;
+
+struct Pagina {
+    string nombre;
+    Pagina* anterior;
+    Pagina* siguiente;
+};
+
+Pagina* actual = NULL;  
+
+// Funci�n para agregar una nueva p�gina
+void agregarPagina() {
+    string nombreT;
+    cout << "Nombre de la pagina: ";
+    cin >> nombreT;
+
+    Pagina* npagina = new Pagina;
+    npagina->nombre = nombreT;
+    npagina->anterior = actual;
+    npagina->siguiente = NULL;
+
+
+    if (actual != NULL) {
+        Pagina* temp = actual->siguiente;
+        while (temp != NULL) {
+            Pagina* borrar = temp;
+            temp = temp->siguiente;
+            delete borrar;
+        }
+        actual->siguiente = npagina;
+    }
+
+    actual = npagina;
+    cout << "Pagina actual: " << actual->nombre << "\n";
+}
+
+// Mostrar la p�gina actual
+void mostrarPaginaActual() {
+    if (actual == NULL)
+        cout << "No hay pagina actual.\n";
+    else
+        cout << "Pagina actual: " << actual->nombre << "\n";
+}
+
+// Retroceder una p�gina
+void retroceder() {
+    if (actual == NULL || actual->anterior == NULL) {
+        cout << "No hay paginas anteriores.\n";
+    } else {
+        actual = actual->anterior;
+        cout << "Retrocediste a: " << actual->nombre << "\n";
+    }
+}
+
+// Avanzar una p�gina
+void avanzar() {
+    if (actual == NULL || actual->siguiente == NULL) {
+        cout << "No hay paginas siguientes.\n";
+    } else {
+        actual = actual->siguiente;
+        cout << "Avanzaste a: " << actual->nombre << "\n";
+    }
+}
+// Liberar toda la memoria
+void eliminarHistorial() {
+    if (actual == NULL) {
+        cout << "No hay historial.\n";
+        return;
+    }
+
+    // Ir al principio del historial
+    Pagina* temp = actual;
+    while (temp->anterior != NULL)
+        temp = temp->anterior;
+
+    // Borrar desde el principio
+    while (temp != NULL) {
+        Pagina* borrar = temp;
+        temp = temp->siguiente;
+        delete borrar;
+    }
+
+    actual = NULL;
+    cout << "Historial eliminado.\n";
+}
+
+int main() {
+    int opcion;
+
+    do {
+        cout << "\n----- Menu ----\n";
+        cout << "1. Mostrar pagina actual\n";
+        cout << "2. Agregar pagina\n";
+        cout << "3. Retroceder a la pagina anterior\n";
+        cout << "4. Avanzar a la pagina siguiente\n";
+        cout << "5. Eliminar el historial\n";
+        cout << "6. Salir\n";
+        cout << "Selecciona una opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1:
+                mostrarPaginaActual();
+                break;
+            case 2:
+                agregarPagina();
+                break;
+            case 3:
+                retroceder();
+                break;
+            case 4:
+                avanzar();
+                break;
+            case 5:
+                eliminarHistorial();
+                break;
+            case 6:
+                cout << "Saliendo...\n";
+                eliminarHistorial();
+                break;
+            default:
+                cout << "Opcion no valida.\n";
+        }
+
+    } while (opcion != 6);
+
+    return 0;
+}
+
