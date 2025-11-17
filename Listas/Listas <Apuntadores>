@@ -1,0 +1,221 @@
+#include <iostream>
+using namespace std;
+struct contacto {
+    string nombre;
+    int numero;
+    contacto* siguientecontacto;
+};
+
+contacto*  listacontactos=NULL;
+string nombreT; 
+int numeroT;
+
+contacto* agregarcontactoadelante() {
+    contacto* ncontacto = new contacto; //Crea un puntero que apunta a una nuevo contacto creado
+    
+    //Agrega el nombre temporal al nuevo contacto
+    cout << "Nombre: ";
+    cin >> nombreT; 
+    ncontacto->nombre = nombreT; 
+	
+	//Agrega el numero temporal al nuevo contacto
+    cout << "Telefono: ";
+    cin >> numeroT; 
+    ncontacto->numero = numeroT; 
+
+    ncontacto->siguientecontacto = listacontactos; //Conecta el nuevo con la demas lista
+    listacontactos = ncontacto; //Actualiza la lista para agregar al nuevo contacto
+
+    return ncontacto; //Devuelve el nuevo contacto
+}
+contacto* agregarcontactofondo() {
+    contacto* ncontacto = new contacto;
+
+    cout << "Nombre: ";
+    cin >> nombreT;
+    cout << "Telefono: ";
+    cin >> numeroT;
+
+    ncontacto->nombre = nombreT;   
+    ncontacto->numero = numeroT;
+    ncontacto->siguientecontacto = NULL;
+
+    if (listacontactos == NULL) {  
+        listacontactos = ncontacto;  
+    } else {                       
+        contacto* actual = listacontactos; 
+        while (actual->siguientecontacto != NULL) { 
+            actual = actual->siguientecontacto;     
+        }                                          
+        actual->siguientecontacto = ncontacto;       
+    }                                              
+
+    return ncontacto; 
+} 
+
+void desplegarlista() {
+    contacto* contactoactual = listacontactos; //Puntero que apunta al contacto mas nueva
+
+    while (contactoactual != NULL) { 
+        cout << "Nombre: " << contactoactual->nombre <<"\n";
+        cout << "Telefono: " << contactoactual->numero <<"\n"; 
+        contactoactual = contactoactual->siguientecontacto; //Avanza el puntero al siguiente contacto
+    }
+}
+
+int size() {
+	 contacto* actual = listacontactos;
+    int contador = 0;
+  
+    while (actual != NULL) {
+        contador++;
+        actual = actual->siguientecontacto;
+    }
+    
+    return contador;
+}
+
+void liberarmemoria() {
+    contacto* contactoactual = listacontactos; //Puntero que apunta al contacto mas nuevo
+    contacto* siguiente;
+
+    while (contactoactual != NULL) { 
+        siguiente = contactoactual->siguientecontacto; //Guarda la direccion del siguiente contacto
+        delete contactoactual; //Libera la memoria del contacto actual
+        contactoactual = siguiente; //Vuelve el contacto siguiente el contacto actual
+    }
+    listacontactos = NULL; //Eliminamos el apuntador porque ya no hay contactos
+}
+
+void eliminarprimercontacto() {
+    if (listacontactos != NULL) {
+        contacto* temp = listacontactos;
+        listacontactos = listacontactos->siguientecontacto;
+        delete temp;
+    } else {
+        cout << "La lista esta vacia.\n";
+    }
+}
+
+void eliminarultimocontacto() {
+    if (listacontactos == NULL) {
+        cout << "La lista esta vacia.\n";
+        return;
+    }
+    if (listacontactos->siguientecontacto == NULL) {
+        delete listacontactos;
+        listacontactos = NULL;
+        
+        return;
+    }
+    contacto* actual = listacontactos;
+    while (actual->siguientecontacto->siguientecontacto != NULL) {
+        actual = actual->siguientecontacto;
+    }
+    delete actual->siguientecontacto;
+    actual->siguientecontacto = NULL;
+}
+int main(){
+	int opcion, z, y, posicion;
+    string busqueda;
+
+    do {    
+        cout << "\n----- Menu----\n";
+        cout << "1. Agrega un nuevo contacto\n";
+        cout << "2. Mostrar contactos\n";
+        cout << "3. Buscar contacto\n";
+        cout << "4. Tamano de la lista\n";
+        cout << "5. Liberar memoria\n";
+        cout << "6. Eliminar contacto\n";
+        cout << "7. Salir\n";
+        cout << "Selecciona una opcion: ";
+        cin >> opcion;
+
+        switch(opcion) {
+            case 1:
+                cout << "\n----- Nuevo Contacto----\n";
+                agregarcontactofondo();
+                break;
+
+            case 2:
+                cout << "\n----- Lista de Contactos----\n";
+                desplegarlista();
+                break;
+
+            case 3:
+                cout << "\n----- Buscar Contacto----\n";
+                cout << "Ingresa el nombre a buscar: ";
+                cin >> busqueda;
+
+                {
+                	contacto* contactoactual = listacontactos; 
+                    bool encontrado = false;
+                    while (contactoactual != NULL) {
+                        if (contactoactual->nombre == busqueda) {
+                            cout << "Contacto encontrado: " << contactoactual->nombre << " --- " << contactoactual->numero << "\n";
+                            encontrado = true;
+                            break;
+                            
+                        }
+                       contactoactual = contactoactual->siguientecontacto; 
+                    }
+
+                    if (!encontrado) {
+                        cout << "Contacto no encontrado. Agregar? (1=S�, 2=No): ";
+                        cin >> z;
+                        if(z == 1) {
+                            cout << "Posicion para agregar\n1. Inicio\n2. Final\n";
+                            cin >> posicion;
+                            if(posicion == 1){
+                                agregarcontactoadelante();
+                                cout << "Contacto agregado al inicio.\n";
+                            } else {
+                                agregarcontactofondo();
+                                cout << "Contacto agregado al final.\n";
+                            }
+                        }
+                    }
+                }
+                break;
+
+            case 4:
+                cout << "Tama�o de la lista: " << size() << "\n";
+                break;
+
+            case 5:
+                liberarmemoria();
+                cout << "Memoria liberada.\n";
+                break;
+
+            case 6:
+                cout << "\n----- Eliminar Contacto----\n";
+                cout << "1. Eliminar primer contacto\n2. Eliminar ultimo contacto\n";
+                cin >> y;
+                if(y == 1){
+                    if(listacontactos!=NULL) {
+                        eliminarprimercontacto();
+                        cout << "Primer contacto eliminado.\n";
+                    } else {
+                        cout << "La lista esta vacia.\n";
+                    }
+                } else if(y == 2){
+                    if(listacontactos!=NULL) {
+                        eliminarultimocontacto();
+                        cout << "Ultimo contacto eliminado.\n";
+                    } else {
+                        cout << "La lista esta vacia.\n";
+                    }
+                } else {
+                    cout << "Opcion invalida.\n";
+                }
+                break;
+
+            case 7:
+                cout << "Saliendo del programa...\n";
+                break;
+
+            default:
+                cout << "Opcion no valida\n";
+        }
+    } while(opcion != 7);
+}
