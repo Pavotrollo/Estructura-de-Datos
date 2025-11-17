@@ -1,0 +1,22 @@
+
+grafo0 = {
+    'Nodo0': ['Nodo1', 'Nodo2'],
+    'Nodo1': ['Nodo3', 'Nodo4'],
+    'Nodo2': ['Nodo5'],
+    'Nodo3': [],
+    'Nodo4': ['Nodo2'],
+    'Nodo5': ['Nodo0']
+    }
+
+def dfs(grafo,  nodo_inicial, visitados=None):
+    if visitados is None:
+        visitados = set()
+        
+    print(nodo_inicial)
+    visitados.add(nodo_inicial)
+    
+    for vecino in grafo[nodo_inicial]:
+        if vecino not in visitados:
+            dfs(grafo, vecino, visitados)
+            
+dfs(grafo0, "Nodo0")
