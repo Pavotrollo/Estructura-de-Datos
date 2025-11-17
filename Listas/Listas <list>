@@ -1,0 +1,127 @@
+#include <iostream>
+#include <list>    
+using namespace std;
+
+struct contacto {
+    string nombre;
+    int numero;
+};
+
+list<contacto> listacontactos;    
+string nombreT;    
+int numeroT;    
+
+int main() {
+    int opcion, z, y, posicion;
+    string busqueda;
+
+    do {    
+        cout << "\n----- Menu----\n";
+        cout << "1. Agrega un nuevo contacto\n";
+        cout << "2. Mostrar contactos\n";
+        cout << "3. Buscar contacto\n";
+        cout << "4. Tamano de la lista\n";
+        cout << "5. Liberar memoria\n";
+        cout << "6. Eliminar contacto\n";
+        cout << "7. Salir\n";
+        cout << "Selecciona una opcion: ";
+        cin >> opcion;
+
+        switch(opcion) {
+            case 1:
+                cout << "\n----- Nuevo Contacto----\n";
+                cout << "Nombre: "; 
+                cin >> nombreT;
+                cout << "Numero Telefonico: ";                             
+                cin >> numeroT;
+                listacontactos.push_back({nombreT, numeroT});
+                break;
+
+            case 2:
+                cout << "\n----- Lista de Contactos----\n";
+                for (auto contacto : listacontactos) {                                
+                    cout << contacto.nombre << " --- " << contacto.numero << "\n";
+                }
+                break;
+
+            case 3:
+                cout << "\n----- Buscar Contacto----\n";
+                cout << "Ingresa el nombre a buscar: ";
+                cin >> busqueda;
+
+                {
+                    bool encontrado = false;
+                    for (auto &c : listacontactos) {
+                        if (c.nombre == busqueda) {
+                            cout << "Contacto encontrado: " << c.nombre << " --- " << c.numero << "\n";
+                            encontrado = true;
+                            break;
+                        }
+                    }
+
+                    if (!encontrado) {
+                        cout << "Contacto no encontrado. Agregar? (1=S�, 2=No): ";
+                        cin >> z;
+                        if(z == 1) {
+                            cout << "Nombre: ";
+                            cin >> nombreT;
+                            cout << "Numero Telefonico: ";
+                            cin >> numeroT;
+
+                            cout << "Posicion para agregar\n1. Inicio\n2. Final\n";
+                            cin >> posicion;
+                            if(posicion == 1){
+                                listacontactos.push_front({nombreT, numeroT});
+                                cout << "Contacto agregado al inicio.\n";
+                            } else {
+                                listacontactos.push_back({nombreT, numeroT});
+                                cout << "Contacto agregado al final.\n";
+                            }
+                        }
+                    }
+                }
+                break;
+
+            case 4:
+                cout << "Tama�o de la lista: " << listacontactos.size() << "\n";
+                break;
+
+            case 5:
+                listacontactos.clear();
+                cout << "Memoria liberada.\n";
+                break;
+
+            case 6:
+                cout << "\n----- Eliminar Contacto----\n";
+                cout << "1. Eliminar primer contacto\n2. Eliminar ultimo contacto\n";
+                cin >> y;
+                if(y == 1){
+                    if(!listacontactos.empty()) {
+                        listacontactos.pop_front();
+                        cout << "Primer contacto eliminado.\n";
+                    } else {
+                        cout << "La lista esta vacia.\n";
+                    }
+                } else if(y == 2){
+                    if(!listacontactos.empty()) {
+                        listacontactos.pop_back();
+                        cout << "Ultimo contacto eliminado.\n";
+                    } else {
+                        cout << "La lista esta vacia.\n";
+                    }
+                } else {
+                    cout << "Opcion invalida.\n";
+                }
+                break;
+
+            case 7:
+                cout << "Saliendo del programa...\n";
+                break;
+
+            default:
+                cout << "Opcion no valida\n";
+        }
+    } while(opcion != 7);
+
+}
+
