@@ -1,0 +1,87 @@
+#include <iostream>
+#include <cstdlib>//Biblioteca 
+
+using namespace std;
+
+int main() {
+    int n_e = 2;
+
+    // Estructura de persona
+    struct Persona {
+        char nombre[30];
+        char apellido[30];
+        char genero; 
+        int matricula;
+    };
+
+    Persona bd[n_e];
+    void* bdirec[4][n_e]; // 4 campos por cada estudiante
+
+    // Captura de datos
+    for (int i = 0; i < n_e; i++) {
+        cout << "Estudiante " << i+1 << "\n";
+        cout << "Ingresa el nombre del estudiante: ";
+        cin >> bd[i].nombre;
+        cout << "Ingresa el apellido del estudiante: ";
+        cin >> bd[i].apellido;
+        cout << "Selecciona el genero M=Masculino y F=Femenino: ";
+        cin >> bd[i].genero;
+        cout << "Ingresa la matricula del estudiante: ";
+        cin >> bd[i].matricula;
+        cout << "--------------------------------------\n";
+
+        // Guardar direcciones en la matriz
+        bdirec[0][i] = &bd[i].nombre;
+        bdirec[1][i] = &bd[i].apellido;
+        bdirec[2][i] = &bd[i].genero;
+        bdirec[3][i] = &bd[i].matricula;
+    }
+
+    int opcion;
+    do {
+        cout << "\n MENU \n";
+        cout << "1. Mostrar la base de datos\n";
+        cout << "2. Mostrar tama�os y direcciones\n";
+        cout << "3. Salir\n";
+        cout << "Selecciona una opcion: ";
+        cin >> opcion;
+
+        switch(opcion) {
+            case 1:
+                cout << "\n BASE DE DATOS \n";
+                for (int i = 0; i < n_e; i++) {
+                    cout << "Estudiante " << (i+1) << ": "
+                         << bd[i].nombre << " "
+                         << bd[i].apellido << " | "
+                         << "Genero: " << bd[i].genero << " | "
+                         << "Matricula: " << bd[i].matricula << "\n";
+                }
+                break;
+
+            case 2:
+                cout << "\nTAMANOS Y DIRECCIONES\n";
+                cout << "Tamano de Persona: " << sizeof(Persona) << " bytes\n";
+                cout << "Tamano total de la base: " << sizeof(bd) << " bytes\n\n";
+
+                for (int i = 0; i < n_e; i++) {
+                    cout << "Estudiante " << i+1 << ":\n";
+                    cout << " Direccion nombre:   " << bdirec[0][i] << "\n";
+                    cout << " Direccion apellido: " << bdirec[1][i] << "\n";
+                    cout << " Direccion genero:   " << bdirec[2][i] << "\n";
+                    cout << " Direccion matricula:" << bdirec[3][i] << "\n";
+                }
+                break;
+
+            case 3:
+                cout << "Saliendo\n";
+                break;
+
+            default:
+                cout << "Opcion invalida. Intenta de nuevo.\n";
+        }
+
+    } while(opcion != 3);
+
+    return 0;
+}
+
